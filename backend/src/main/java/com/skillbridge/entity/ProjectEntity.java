@@ -20,6 +20,8 @@ public class ProjectEntity {
     private String description;
     private String tags;
     private String repoUrl;
+    private boolean isArchived;
+    private boolean isDeleted;
 
     private LocalDateTime createdAt;
 

@@ -1,6 +1,7 @@
 package com.skillbridge.service;
 
 import com.skillbridge.entity.UserEntity;
+import com.skillbridge.exception.LoggedInUserException;
 import com.skillbridge.exception.ResourceNotFoundException;
 import com.skillbridge.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +19,14 @@ public class UserService {
     UserRepository userRepository;
     @Autowired
     JwtService jwtService;
-    public UserEntity loggedInUser(String token) throws ResourceNotFoundException {
+    public UserEntity loggedInUser(String token)  {
         String email = jwtService.extractUsername(token);
-        Optional<UserEntity> loggedInUser = userRepository.findByEmail(email);
-        if(loggedInUser.isPresent()){
-            return loggedInUser.get();
-        }
-        throw new ResourceNotFoundException("Invalid Login");
+//        Optional<UserEntity> loggedInUser = userRepository.findByEmail(email);
+//        if(loggedInUser.isPresent()){
+//            return loggedInUser.get();
+//        }
+//        throw new LoggedInUserException("Invalid Login");
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new LoggedInUserException("Invalid Login"));
     }
 }
