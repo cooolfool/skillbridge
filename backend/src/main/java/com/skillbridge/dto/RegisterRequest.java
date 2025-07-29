@@ -12,4 +12,8 @@ public class RegisterRequest {
     private String email;
     private String password;
     private String role; // MENTOR or MENTEE
+    private String bio;
+    private String skills;
+    private String gitHub;
+    private String linkedIn;
 }

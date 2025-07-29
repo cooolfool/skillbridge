@@ -26,6 +26,10 @@ public class AuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole().toUpperCase())
+                .linkedIn(request.getLinkedIn())
+                .bio(request.getBio())
+                .skills(request.getSkills())
+                .gitHub(request.getGitHub())
                 .build();
 
         userRepository.save(user);
