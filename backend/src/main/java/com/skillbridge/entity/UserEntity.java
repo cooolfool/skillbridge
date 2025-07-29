@@ -27,20 +27,14 @@ public class UserEntity {
     @Column(nullable = false)
     private String password;
 
+
     private String role; // Can be GUEST, USER, MENTOR, ADMIN
 
     private String bio;
 
     private String skills;
-
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<ProjectEntity> projects;
-
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<CommentEntity> comments;
-//
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<LikeEntity> likes;
+    private String linkedIn;
+    private String gitHub;
 
     @OneToMany(mappedBy = "host", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SessionEntity> sessions;
