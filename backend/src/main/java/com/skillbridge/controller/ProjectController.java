@@ -41,7 +41,7 @@ public class ProjectController {
     }
 
     @GetMapping("/feed")
-    public ResponseEntity<List<ProjectResponse>> getAllProjectsForFeed(@RequestHeader(value = "authToken") String token) {
+        public ResponseEntity<List<ProjectResponse>> getAllProjectsForFeed(@RequestHeader(value = "authToken") String token) {
         UserEntity loggedInUser = userService.loggedInUser(token);
         return new ResponseEntity<>(projectService.getAllProjectsForFeed(), HttpStatus.OK);
 

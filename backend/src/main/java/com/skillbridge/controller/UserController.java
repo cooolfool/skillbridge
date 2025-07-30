@@ -1,6 +1,8 @@
 package com.skillbridge.controller;
 
 
+import com.skillbridge.dto.EditProfileRequest;
+import com.skillbridge.dto.RegisterRequest;
 import com.skillbridge.entity.UserEntity;
 import com.skillbridge.exception.ResourceNotFoundException;
 import com.skillbridge.service.UserService;
@@ -8,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -28,10 +27,16 @@ public class UserController {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new IllegalArgumentException("Invalid Authorization header");
         }
-
         String token = authHeader.substring(7);
         UserEntity user = userService.loggedInUser(token);
         return ResponseEntity.ok(user);
     }
 
+    @PostMapping
+    ResponseEntity<UserEntity> editProfile(@RequestBody EditProfileRequest editProfileRequest,
+                                           @RequestHeader("Authorization") String authHeader){
+        UserEntity user = userService.editProfile(editProfileRequest);
+        return ResponseEntity.ok(user);
+
+    }
 }

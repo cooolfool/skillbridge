@@ -53,9 +53,11 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectEntity> projectEntityList = projectRepo.findByUser(user);
         List<ProjectResponse> responseList = new ArrayList<>();
         for(ProjectEntity project : projectEntityList){
-            ProjectResponse projectResponse = new ProjectResponse();
-            BeanUtils.copyProperties(project,projectResponse);
-            responseList.add(projectResponse);
+            if(project.getUser().equals(user)) {
+                ProjectResponse projectResponse = new ProjectResponse();
+                BeanUtils.copyProperties(project, projectResponse);
+                responseList.add(projectResponse);
+            }
         }
         return responseList;
     }
