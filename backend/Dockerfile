@@ -16,4 +16,4 @@ RUN apt-get update && \
 EXPOSE 8080
 
 # Run the Spring Boot app
-CMD ["java", "-jar", "target/backend-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/backend-0.0.1-SNAPSHOT.jar","--spring.profiles.active=prod"]
