@@ -14,16 +14,26 @@ public class ProjectEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
+    private UserEntity createdBy;
 
+
+    @Column(columnDefinition = "TEXT")
     private String title;
+
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
+
+    @Column(columnDefinition = "TEXT")
     private String tags;
+
     private String repoUrl;
     private boolean isArchived;
     private boolean isDeleted;
 
     private LocalDateTime createdAt;
+    private LocalDateTime lastUpdatedAt;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private Set<CommentEntity> comments;

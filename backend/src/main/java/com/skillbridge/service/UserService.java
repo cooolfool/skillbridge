@@ -23,6 +23,8 @@ public class UserService {
     @Autowired
     JwtService jwtService;
     public UserEntity loggedInUser(String token)  {
+
+        log.info("Request in loggedInUser service");
         String email = jwtService.extractUsername(token);
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoggedInUserException("Invalid Login"));
