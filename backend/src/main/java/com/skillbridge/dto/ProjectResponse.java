@@ -2,6 +2,7 @@ package com.skillbridge.dto;
 
 import com.skillbridge.entity.CommentEntity;
 import com.skillbridge.entity.LikeEntity;
+import com.skillbridge.entity.UserEntity;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -18,5 +19,6 @@ public class ProjectResponse {
     private LocalDateTime createdAt;
     private Set<CommentEntity> comments;
     private Set<LikeEntity> likes;
+    private UserEntity createdBy;
 
 }

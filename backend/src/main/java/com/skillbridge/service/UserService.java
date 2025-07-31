@@ -1,11 +1,14 @@
 package com.skillbridge.service;
 
+import com.skillbridge.dto.EditProfileRequest;
+import com.skillbridge.dto.RegisterRequest;
 import com.skillbridge.entity.UserEntity;
 import com.skillbridge.exception.LoggedInUserException;
 import com.skillbridge.exception.ResourceNotFoundException;
 import com.skillbridge.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +23,23 @@ public class UserService {
     @Autowired
     JwtService jwtService;
     public UserEntity loggedInUser(String token)  {
+
+        log.info("Request in loggedInUser service");
         String email = jwtService.extractUsername(token);
-//        Optional<UserEntity> loggedInUser = userRepository.findByEmail(email);
-//        if(loggedInUser.isPresent()){
-//            return loggedInUser.get();
-//        }
-//        throw new LoggedInUserException("Invalid Login");
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoggedInUserException("Invalid Login"));
+    }
+
+
+    public UserEntity editProfile(EditProfileRequest editProfileRequest){
+
+        Optional<UserEntity> user = userRepository.findByEmail(editProfileRequest.getEmail());
+        if(user.isPresent()){
+            UserEntity userEntity = user.get();
+            BeanUtils.copyProperties(editProfileRequest,userEntity,"id");
+            userRepository.save(userEntity);
+            return userEntity;
+        }
+        throw new ResourceNotFoundException("User not found");
     }
 }
