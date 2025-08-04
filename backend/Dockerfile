@@ -14,8 +14,6 @@ COPY src ./src
 
 # Make mvnw executable and install Maven
 RUN chmod +x mvnw && \
-    apt-get update && \
-    apt-get install -y maven && \
     ./mvnw clean install -DskipTests
 
 # Expose the port the app runs on
