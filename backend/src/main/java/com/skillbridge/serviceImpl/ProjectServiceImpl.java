@@ -10,21 +10,20 @@ import com.skillbridge.exception.LoggedInUserException;
 import com.skillbridge.exception.ResourceNotFoundException;
 import com.skillbridge.repository.ProjectRepository;
 import com.skillbridge.service.ProjectService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class ProjectServiceImpl implements ProjectService {
 
-
-    @Autowired
-    ProjectRepository projectRepo;
+    private final ProjectRepository projectRepo;
 
     @Override
     public ProjectResponse publishProject(PublishProjectRequest publishProjectRequest, UserEntity loggedInUser) {
@@ -42,6 +41,7 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectEntity project = new ProjectEntity();
         BeanUtils.copyProperties(publishProjectRequest, project);
         project.setCreatedAt(LocalDateTime.now());
+        project.setLastUpdatedAt(LocalDateTime.now());
         project.setArchived(false);
         project.setDeleted(false);
         project.setCreatedBy(loggedInUser);
@@ -102,6 +102,7 @@ public class ProjectServiceImpl implements ProjectService {
             throw new LoggedInUserException("Not Authorized");
         }
         BeanUtils.copyProperties(editProjectRequest, project, "id");
+        project.setLastUpdatedAt(LocalDateTime.now());
         projectRepo.save(project);
 
         ProjectResponse response = new ProjectResponse();

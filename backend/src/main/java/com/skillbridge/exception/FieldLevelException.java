@@ -10,4 +10,7 @@ public class FieldLevelException extends  RuntimeException{
         this.fieldLevelErrors = warningMap;
     }
 
+    public Map<String, Object> getErrorMap() {
+        return fieldLevelErrors;
+    }
 }

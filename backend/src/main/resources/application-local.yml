@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://ep-proud-cherry-a1x132v7-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
-    username: neondb_owner
-    password: npg_SzQ2u6empEFN
+    url: ${DATABASE_URL:jdbc:postgresql://ep-proud-cherry-a1x132v7-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require}
+    username: ${DATABASE_USERNAME:neondb_owner}
+    password: ${DATABASE_PASSWORD:npg_SzQ2u6empEFN}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -24,5 +24,5 @@ server:
 #    context-path: /api
 
 jwt:
-  secret: coolfooliscreatingthisprojecton10062025
+  secret: ${JWT_SECRET:coolfooliscreatingthisprojecton10062025}
   expiration: 86400000 # 24 hours in milliseconds

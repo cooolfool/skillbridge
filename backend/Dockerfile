@@ -4,16 +4,22 @@ FROM eclipse-temurin:21-jdk
 # Set the working directory
 WORKDIR /app
 
-# Copy the project files
-COPY . .
+# Copy the Maven wrapper and pom.xml first for better caching
+COPY mvnw .
+COPY mvnw.cmd .
+COPY pom.xml .
 
-# Install Maven
-RUN apt-get update && \
+# Copy the source code
+COPY src ./src
+
+# Make mvnw executable and install Maven
+RUN chmod +x mvnw && \
+    apt-get update && \
     apt-get install -y maven && \
-    mvn clean install -DskipTests
+    ./mvnw clean install -DskipTests
 
 # Expose the port the app runs on
 EXPOSE 8080
 
 # Run the Spring Boot app
-CMD ["java", "-jar", "target/backend-0.0.1-SNAPSHOT.jar","--spring.profiles.active=prod"]
+CMD ["java", "-jar", "target/backend-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
