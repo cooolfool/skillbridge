@@ -24,7 +24,6 @@ public class RegisterRequest {
     private String password;
     
     @NotBlank(message = "Role is required")
-    @Pattern(regexp = "^(MENTOR|MENTEE)$", message = "Role must be either MENTOR or MENTEE")
     private String role; // MENTOR or MENTEE
     
     @Size(max = 500, message = "Bio cannot exceed 500 characters")

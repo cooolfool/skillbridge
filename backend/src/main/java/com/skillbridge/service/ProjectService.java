@@ -3,7 +3,6 @@ package com.skillbridge.service;
 import com.skillbridge.dto.EditProjectRequest;
 import com.skillbridge.dto.ProjectResponse;
 import com.skillbridge.dto.PublishProjectRequest;
-import com.skillbridge.entity.ProjectEntity;
 import com.skillbridge.entity.UserEntity;
 
 import java.util.List;

@@ -28,8 +28,7 @@ public class UserEntity {
     private String password;
 
 
-    private String role; // Can be GUEST, USER, MENTOR, ADMIN
-
+    private String role; 
     private String bio;
 
     private String skills;
