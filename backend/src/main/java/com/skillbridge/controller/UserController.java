@@ -39,4 +39,13 @@ public class UserController {
         return ResponseEntity.ok(user);
 
     }
+
+    @GetMapping("/{id}")
+    ResponseEntity<UserEntity> viewProfile(@PathVariable long id){
+        log.info("Request in viewProfile controller for ID : {}", id);
+        UserEntity user = userService.viewProfile(id);
+        return ResponseEntity.ok(user);
+    }
+
+
 }

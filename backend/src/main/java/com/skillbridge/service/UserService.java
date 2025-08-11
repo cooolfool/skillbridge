@@ -15,31 +15,8 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
-public class UserService {
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    JwtService jwtService;
-    public UserEntity loggedInUser(String token)  {
-
-        log.info("Request in loggedInUser service");
-        String email = jwtService.extractUsername(token);
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new LoggedInUserException("Invalid Login"));
-    }
-
-
-    public UserEntity editProfile(EditProfileRequest editProfileRequest){
-
-        Optional<UserEntity> user = userRepository.findByEmail(editProfileRequest.getEmail());
-        if(user.isPresent()){
-            UserEntity userEntity = user.get();
-            BeanUtils.copyProperties(editProfileRequest,userEntity,"id");
-            userRepository.save(userEntity);
-            return userEntity;
-        }
-        throw new ResourceNotFoundException("User not found");
-    }
+public interface UserService {
+    public UserEntity loggedInUser(String token) ;
+    public UserEntity editProfile(EditProfileRequest editProfileRequest);
+    public UserEntity viewProfile(long id);
 }
