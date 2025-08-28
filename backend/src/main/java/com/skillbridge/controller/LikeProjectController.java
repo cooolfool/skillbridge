@@ -1,0 +1,47 @@
+package com.skillbridge.controller;
+
+import com.skillbridge.entity.UserEntity;
+import com.skillbridge.service.LikeProjectService;
+import com.skillbridge.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/projects")
+@RequiredArgsConstructor
+public class LikeProjectController {
+
+    private final LikeProjectService likeProjectService;
+    private final UserService userService;
+
+    @PostMapping("/{projectId}/like")
+    public ResponseEntity<String> likeProject(@PathVariable Long projectId,
+                                              @RequestHeader("authToken") String token) {
+        UserEntity loggedInUser = userService.loggedInUser(token);
+        likeProjectService.likeProject(projectId, loggedInUser.getId());
+        return ResponseEntity.ok("Project liked successfully");
+    }
+
+    @PostMapping("/{projectId}/unlike")
+    public ResponseEntity<Map<String,String>> unlikeProject(@PathVariable Long projectId,
+                                                @RequestHeader("authToken") String token) {
+        UserEntity loggedInUser = userService.loggedInUser(token);
+        likeProjectService.unlikeProject(projectId, loggedInUser.getId());
+        return ResponseEntity.ok(Map.of("message", "Project liked successfully"));
+    }
+
+    @GetMapping("/{projectId}/likes/count")
+    public ResponseEntity<Long> getLikeCount(@PathVariable Long projectId) {
+        return ResponseEntity.ok(likeProjectService.getLikeCount(projectId));
+    }
+
+    @GetMapping("/{projectId}/likes/status")
+    public ResponseEntity<Boolean> hasUserLiked(@PathVariable Long projectId,
+                                                @RequestHeader("authToken") String token) {
+        UserEntity loggedInUser = userService.loggedInUser(token);
+        return ResponseEntity.ok(likeProjectService.hasUserLiked(projectId, loggedInUser.getId()));
+    }
+}

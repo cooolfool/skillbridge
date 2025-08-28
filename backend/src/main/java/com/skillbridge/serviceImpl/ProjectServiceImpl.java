@@ -10,6 +10,7 @@ import com.skillbridge.exception.LoggedInUserException;
 import com.skillbridge.exception.ResourceNotFoundException;
 import com.skillbridge.repository.ProjectRepository;
 import com.skillbridge.service.ProjectService;
+import com.skillbridge.util.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +25,7 @@ import java.util.*;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepo;
+    private final UserMapper userMapper;
 
     @Override
     public ProjectResponse publishProject(PublishProjectRequest publishProjectRequest, UserEntity loggedInUser) {
@@ -45,10 +47,12 @@ public class ProjectServiceImpl implements ProjectService {
         project.setArchived(false);
         project.setDeleted(false);
         project.setCreatedBy(loggedInUser);
+        project.setLikesCount(0);
         projectRepo.save(project);
 
         ProjectResponse response = new ProjectResponse();
         BeanUtils.copyProperties(project, response);
+        response.setCreatedBy(userMapper.toDto(loggedInUser));
         return response;
     }
 
@@ -75,6 +79,7 @@ public class ProjectServiceImpl implements ProjectService {
         for (ProjectEntity project : projectEntityList) {
             ProjectResponse projectResponse = new ProjectResponse();
             BeanUtils.copyProperties(project, projectResponse);
+            projectResponse.setCreatedBy(userMapper.toDto(project.getCreatedBy()));
             responseList.add(projectResponse);
         }
         return responseList;
@@ -87,6 +92,7 @@ public class ProjectServiceImpl implements ProjectService {
         if(optionalProject.isPresent()){
             ProjectResponse response = new ProjectResponse();
             BeanUtils.copyProperties(optionalProject.get(),response);
+            response.setCreatedBy(userMapper.toDto(optionalProject.get().getCreatedBy()));
             return response;
         }
        throw new ResourceNotFoundException("No Project found with given id");
@@ -107,6 +113,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         ProjectResponse response = new ProjectResponse();
         BeanUtils.copyProperties(project, response);
+        response.setCreatedBy(userMapper.toDto(loggedInUser));
         return response;
 
     }

@@ -35,9 +35,9 @@ public class ProjectEntity {
     private LocalDateTime createdAt;
     private LocalDateTime lastUpdatedAt;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private Set<CommentEntity> comments;
+    @Column
+    private long commentsCount;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private Set<LikeEntity> likes;
+    @Column
+    private long likesCount;
 }

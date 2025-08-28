@@ -4,11 +4,19 @@ spring:
     username: ${DATABASE_USERNAME:neondb_owner}
     password: ${DATABASE_PASSWORD:npg_SzQ2u6empEFN}
     driver-class-name: org.postgresql.Driver
+  data:
+    redis:
+      host: ${REDIS_HOST:gorgeous-humpback-60509.upstash.io}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:AexdAAIncDEwYjgzNmFhNmZjOWM0MWM0OTI1NzU2YWI2MjU3OTA0MnAxNjA1MDk}
+      timeout: 60000
+      ssl:
+        enabled: true
 
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true

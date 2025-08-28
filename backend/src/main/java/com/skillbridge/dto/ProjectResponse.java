@@ -17,8 +17,8 @@ public class ProjectResponse {
     private String tags;
     private String repoUrl;
     private LocalDateTime createdAt;
-    private Set<CommentEntity> comments;
-    private Set<LikeEntity> likes;
-    private UserEntity createdBy;
+//    private Set<CommentEntity> comments;
+    private long likesCount;
+    private UserDto createdBy;
 
 }
