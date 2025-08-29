@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
 
         log.info("Request in loggedInUser service");
         String email = jwtService.extractUsername(token);
+        log.info("User email : {}",email);
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoggedInUserException("Invalid Login"));
     }

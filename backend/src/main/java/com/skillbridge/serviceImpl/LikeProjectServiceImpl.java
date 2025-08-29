@@ -8,6 +8,7 @@ import com.skillbridge.repository.ProjectRepository;
 import com.skillbridge.repository.UserRepository;
 import com.skillbridge.service.LikeProjectService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class LikeProjectServiceImpl implements LikeProjectService {
 
     private final LikeProjectRepository likeRepository;
@@ -35,6 +37,7 @@ public class LikeProjectServiceImpl implements LikeProjectService {
 
     @Override
     public void likeProject(Long projectId, Long userId) {
+        log.info("inside like project service for project Id  : {} by user Id : {}",projectId,userId);
         if (likeRepository.existsByProjectIdAndUserId(projectId, userId)) {
             return; // already liked
         }

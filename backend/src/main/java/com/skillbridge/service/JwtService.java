@@ -3,6 +3,7 @@ package com.skillbridge.service;
 import com.skillbridge.entity.UserEntity;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Service
+@Slf4j
 public class JwtService {
 
     @Value("${jwt.secret}")
@@ -33,6 +35,7 @@ public class JwtService {
     }
 
     public String extractUsername(String token) {
+        log.info("The uuser is : {}",extractClaim(token, Claims::getSubject));
         return extractClaim(token, Claims::getSubject);
     }
 

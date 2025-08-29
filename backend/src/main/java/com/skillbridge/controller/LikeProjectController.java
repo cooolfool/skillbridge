@@ -25,6 +25,7 @@ public class LikeProjectController {
         log.info("Request in like project controller");
         log.info("Request Hearders : {}",token);
         UserEntity loggedInUser = userService.loggedInUser(token);
+        log.info("Logged in user : {}", loggedInUser.getName());
         likeProjectService.likeProject(projectId, loggedInUser.getId());
         return ResponseEntity.ok("Project liked successfully");
     }
