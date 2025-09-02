@@ -27,6 +27,8 @@ public class LikeProjectController {
         UserEntity loggedInUser = userService.loggedInUser(token);
         log.info("Logged in user : {}", loggedInUser.getName());
         likeProjectService.likeProject(projectId, loggedInUser.getId());
+        log.info("Project liked successfully!");
+        log.info("Returning from controller : {}",ResponseEntity.ok("Project liked successfully"));
         return ResponseEntity.ok("Project liked successfully");
     }
 
