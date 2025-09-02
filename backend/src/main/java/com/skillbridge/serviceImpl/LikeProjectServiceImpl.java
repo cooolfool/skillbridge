@@ -39,6 +39,7 @@ public class LikeProjectServiceImpl implements LikeProjectService {
     public void likeProject(Long projectId, Long userId) {
         log.info("inside like project service for project Id  : {} by user Id : {}",projectId,userId);
         if (likeRepository.existsByProjectIdAndUserId(projectId, userId)) {
+            log.info("the project : {} is already liked by the user : {}", projectId,userId);
             return; // already liked
         }
 
@@ -54,7 +55,7 @@ public class LikeProjectServiceImpl implements LikeProjectService {
                 .build());
         project.setLikesCount(project.getLikesCount()+1);
         projectRepository.save(project);
-
+        log.info("Liked project!");
         // Increment like count
         redisTemplate.opsForValue().increment(getLikeCountKey(projectId));
         redisTemplate.expire(getLikeCountKey(projectId), CACHE_TTL);
