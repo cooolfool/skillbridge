@@ -1,9 +1,16 @@
 spring:
   datasource:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    primary:
+      url: ${DATABASE_URL}
+      username: ${DATABASE_USERNAME}
+      password: ${DATABASE_PASSWORD}
+      driver-class-name: org.postgresql.Driver
+
+    secondary:
+      url: ${SECONDARY_DB_URL}
+      username: ${SECONDARY_DB_USERNAME}
+      password: ${SECONDARY_DB_PASSWORD}
+      driver-class-name: org.postgresql.Driver
   data:
       redis:
         host: ${REDIS_HOST:master-koala-13654.upstash.io}

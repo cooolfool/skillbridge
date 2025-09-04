@@ -1,9 +1,16 @@
 spring:
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://ep-proud-cherry-a1x132v7-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require}
-    username: ${DATABASE_USERNAME:neondb_owner}
-    password: ${DATABASE_PASSWORD:npg_SzQ2u6empEFN}
-    driver-class-name: org.postgresql.Driver
+    primary:
+      url: ${PRIMARY_DB_URL:jdbc:postgresql://ep-proud-cherry-a1x132v7-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require}
+      username: ${PRIMARY_DB_USERNAME:neondb_owner}
+      password: ${PRIMARY_DB_PASSWORD:npg_SzQ2u6empEFN}
+      driver-class-name: org.postgresql.Driver
+
+    secondary:
+      url: ${SECONDARY_DB_URL:jdbc:postgresql://dpg-d2sncvfdiees7393nn20-a.singapore-postgres.render.com:5432/skillbridge_secondary_db?sslmode=require}
+      username: ${SECONDARY_DB_USERNAME:skillbridge_secondary_db_user}
+      password: ${SECONDARY_DB_PASSWORD:Nq8XfmShL7z0SzVwBONGkdHJnFdJ5STr}
+      driver-class-name: org.postgresql.Driver
   data:
     redis:
       host: ${REDIS_HOST:gorgeous-humpback-60509.upstash.io}
