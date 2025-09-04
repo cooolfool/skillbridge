@@ -10,7 +10,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install PostgreSQL clienname: Sync Neon to Render DB
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # runs daily at midnight UTC
+  workflow_dispatch:       # allow manual trigger
+
+jobs:
+  sync-database:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Dump Neon DB
+        run: pg_dump "$NEON_PGDUMP_URL" > dump.sql
+        env:
+          NEON_PGDUMP_URL: ${{ secrets.NEON_PGDUMP_URL }}
+
+      - name: Clear Render DB
+        run: psql "$RENDER_PGDUMP_URL" -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+        env:
+          RENDER_PGDUMP_URL: ${{ secrets.RENDER_PGDUMP_URL }}
+
+      - name: Restore dump into Render DB
+        run: psql "$RENDER_PGDUMP_URL" < dump.sql
+        env:
+          RENDER_PGDUMP_URL: ${{ secrets.RENDER_PGDUMP_URL }}
+
         run: sudo apt-get install -y postgresql-client
 
       - name: Dump Neon DB
