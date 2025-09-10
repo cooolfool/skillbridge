@@ -41,10 +41,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FieldLevelException.class)
     public ResponseEntity<ErrorResponse> handleFieldLevelException(FieldLevelException ex) {
         ErrorResponse error = new ErrorResponse(
-            "VALIDATION_ERROR",
-            ex.getMessage(),
-            LocalDateTime.now(),
-            ex.getErrorMap()
+                "VALIDATION_FAILED",
+                ex.getMessage(),
+                LocalDateTime.now(),
+                ex.getErrorMap()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
@@ -52,19 +52,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, Object> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        
-        ErrorResponse error = new ErrorResponse(
-            "VALIDATION_ERROR",
-            "Validation failed",
-            LocalDateTime.now(),
-            errors
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errors.put(error.getField(), error.getDefaultMessage());
+        }
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                "VALIDATION_FAILED",
+                "Invalid input fields",
+                LocalDateTime.now(),
+                errors
         );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

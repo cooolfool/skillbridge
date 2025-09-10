@@ -4,10 +4,14 @@ import com.skillbridge.dto.AuthResponse;
 import com.skillbridge.dto.AuthenticationRequest;
 import com.skillbridge.dto.RegisterRequest;
 import com.skillbridge.entity.UserEntity;
+import com.skillbridge.exception.LoggedInUserException;
+import com.skillbridge.exception.ResourceNotFoundException;
 import com.skillbridge.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,15 +43,21 @@ public class AuthService {
     }
 
     public AuthResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
+        try {
+            Authentication authenticate = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+        }
+        catch(BadCredentialsException e){
+            throw new LoggedInUserException("Invalid Credentials!");
+        }
+
 
         UserEntity user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User Not Found with the email id provided."));
 
         String jwtToken = jwtService.generateToken(user);
         return AuthResponse.builder().token(jwtToken).user(user).build();

@@ -24,19 +24,23 @@ public class RegisterRequest {
     private String password;
     
     @NotBlank(message = "Role is required")
-    private String role; // MENTOR or MENTEE
+    private String role;
     
     @Size(max = 500, message = "Bio cannot exceed 500 characters")
     private String bio;
     
-    @Size(max = 200, message = "Skills cannot exceed 200 characters")
     private String skills;
-    
-    @Pattern(regexp = "^(https?://)?(www\\.)?github\\.com/[a-zA-Z0-9-]+/?$", 
-             message = "GitHub URL must be a valid GitHub profile URL")
+
+    @Pattern(
+            regexp = "^(https?://)?(www\\.)?github\\.com/[a-zA-Z0-9-]+/?$|^$",
+            message = "GitHub URL must be a valid GitHub profile URL"
+    )
     private String gitHub;
-    
-    @Pattern(regexp = "^(https?://)?(www\\.)?linkedin\\.com/in/[a-zA-Z0-9-]+/?$", 
-             message = "LinkedIn URL must be a valid LinkedIn profile URL")
+
+    @Pattern(
+            regexp = "^(https?://)?(www\\.)?linkedin\\.com/in/[a-zA-Z0-9-]+/?$|^$",
+            message = "LinkedIn URL must be a valid LinkedIn profile URL"
+    )
     private String linkedIn;
+
 }
