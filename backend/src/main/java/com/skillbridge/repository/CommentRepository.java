@@ -13,7 +13,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity,Long> {
 
     List<CommentEntity> findByProjectAndDeletedFalse(ProjectEntity project);
     List<CommentEntity> findByProjectIdAndDeletedFalse(Long projectId);
-    List<CommentEntity> findByProjectIdAndParentCommentId(Long projectId, Long parentCommentId);
+    List<CommentEntity> findByProjectId(Long projectId);
     List<CommentEntity> findByParentCommentId(Long parentCommentId);
 
 }

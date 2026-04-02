@@ -30,7 +30,7 @@ public class CommentController {
             @RequestBody CommentDto commentDto,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        String email = userDetails.getUsername(); // comes from JWT
+        String email = userDetails.getUsername();
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         log.info("API call: ADD comment to projectId={} by userId={}", commentDto.getProjectId(), user.getId());
@@ -42,8 +42,10 @@ public class CommentController {
     @PutMapping
     public ResponseEntity<CommentResponseDto> editComment(
             @RequestBody CommentDto commentDto,
-            @AuthenticationPrincipal UserEntity user) {
-
+            @AuthenticationPrincipal UserDetails userDetails) {
+        String email = userDetails.getUsername();
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         log.info("API call: EDIT commentId={} by userId={}", commentDto.getId(), user.getId());
         CommentResponseDto response = commentService.editComment(commentDto, user);
         return ResponseEntity.ok(response);
@@ -53,8 +55,10 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<CommentResponseDto> deleteComment(
             @PathVariable Long commentId,
-            @AuthenticationPrincipal UserEntity user) {
-
+            @AuthenticationPrincipal UserDetails userDetails) {
+        String email = userDetails.getUsername();
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         log.info("API call: DELETE commentId={} by userId={}", commentId, user.getId());
         CommentResponseDto response = commentService.deleteComment(commentId, user);
         return ResponseEntity.ok(response);

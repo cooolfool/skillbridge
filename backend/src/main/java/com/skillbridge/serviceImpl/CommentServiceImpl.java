@@ -151,9 +151,7 @@ public class CommentServiceImpl implements CommentService {
 
     public List<CommentTreeDto> getCommentsForProject(Long projectId) {
         log.info("Fetching comments for projectId={}", projectId);
-
-        // Step 1: fetch top-level comments (parent = 0)
-        List<CommentEntity> topLevel = commentRepository.findByProjectIdAndParentCommentId(projectId, 0L);
+        List<CommentEntity> topLevel = commentRepository.findByProjectId(projectId);
 
         // Step 2: map entities -> DTOs with recursion
         return topLevel.stream()
