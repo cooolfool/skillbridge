@@ -10,6 +10,7 @@ import com.skillbridge.exception.LoggedInUserException;
 import com.skillbridge.exception.ResourceNotFoundException;
 import com.skillbridge.repository.ProjectRepository;
 import com.skillbridge.service.ProjectService;
+import com.skillbridge.util.ProjectUtil;
 import com.skillbridge.util.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepo;
     private final UserMapper userMapper;
+    private final ProjectUtil projectUtil;
 
     @Override
     public ProjectResponse publishProject(PublishProjectRequest publishProjectRequest, UserEntity loggedInUser) {
@@ -53,6 +55,7 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectResponse response = new ProjectResponse();
         BeanUtils.copyProperties(project, response);
         response.setCreatedBy(userMapper.toDto(loggedInUser));
+        response.setLikedByCurrentUser(projectUtil.isProjectLikedByUser(project.getId(), loggedInUser.getId()));
         return response;
     }
 
@@ -65,6 +68,8 @@ public class ProjectServiceImpl implements ProjectService {
             if (project.getCreatedBy().equals(user)) {
                 ProjectResponse projectResponse = new ProjectResponse();
                 BeanUtils.copyProperties(project, projectResponse);
+                projectResponse.setLikedByCurrentUser(projectUtil.isProjectLikedByUser(project.getId(), user.getId()));
+
                 responseList.add(projectResponse);
             }
         }
@@ -72,7 +77,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectResponse> getAllProjectsForFeed() {
+    public List<ProjectResponse> getAllProjectsForFeed(UserEntity loggedInUser ) {
         log.info("Request in getAllProjectsForFeed service");
         List<ProjectEntity> projectEntityList = projectRepo.findAll();
         List<ProjectResponse> responseList = new ArrayList<>();
@@ -80,19 +85,22 @@ public class ProjectServiceImpl implements ProjectService {
             ProjectResponse projectResponse = new ProjectResponse();
             BeanUtils.copyProperties(project, projectResponse);
             projectResponse.setCreatedBy(userMapper.toDto(project.getCreatedBy()));
+            projectResponse.setLikedByCurrentUser(projectUtil.isProjectLikedByUser(project.getId(), loggedInUser.getId()));
             responseList.add(projectResponse);
         }
         return responseList;
     }
 
     @Override
-    public ProjectResponse getProjectById(Long id) {
+    public ProjectResponse getProjectById(Long id,UserEntity loggedInUser) {
         log.info("Request in getProjectById service");
         Optional<ProjectEntity> optionalProject = projectRepo.findById(id);
         if(optionalProject.isPresent()){
             ProjectResponse response = new ProjectResponse();
             BeanUtils.copyProperties(optionalProject.get(),response);
             response.setCreatedBy(userMapper.toDto(optionalProject.get().getCreatedBy()));
+            response.setLikedByCurrentUser(projectUtil.isProjectLikedByUser(response.getId(), loggedInUser.getId()));
+
             return response;
         }
        throw new ResourceNotFoundException("No Project found with given id");
@@ -114,6 +122,7 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectResponse response = new ProjectResponse();
         BeanUtils.copyProperties(project, response);
         response.setCreatedBy(userMapper.toDto(loggedInUser));
+        response.setLikedByCurrentUser(projectUtil.isProjectLikedByUser(response.getId(), loggedInUser.getId()));
         return response;
 
     }

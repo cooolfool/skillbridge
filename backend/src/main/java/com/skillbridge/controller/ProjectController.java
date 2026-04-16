@@ -49,7 +49,8 @@ public class ProjectController {
         // UserEntity loggedInUser = userService.loggedInUser(token);
 
         log.info("Request in getAllProjectsForFeed controller");
-        return new ResponseEntity<>(projectService.getAllProjectsForFeed(), HttpStatus.OK);
+        UserEntity loggedInUser = userService.loggedInUser(token);
+        return new ResponseEntity<>(projectService.getAllProjectsForFeed(loggedInUser ), HttpStatus.OK);
 
     }
 
@@ -57,7 +58,8 @@ public class ProjectController {
     public ResponseEntity<ProjectResponse> getProjectById(@PathVariable Long id, @RequestHeader(value = "authToken") String token) {
 
         log.info("Request in getProjectById controller");
-        ProjectResponse project = projectService.getProjectById(id);
+        UserEntity loggedInUser = userService.loggedInUser(token);
+        ProjectResponse project = projectService.getProjectById(id,loggedInUser);
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 

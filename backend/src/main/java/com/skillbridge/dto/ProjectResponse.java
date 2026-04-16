@@ -19,6 +19,7 @@ public class ProjectResponse {
     private LocalDateTime createdAt;
 //    private Set<CommentEntity> comments;
     private long likesCount;
+    private boolean likedByCurrentUser;
     private UserDto createdBy;
 
 }

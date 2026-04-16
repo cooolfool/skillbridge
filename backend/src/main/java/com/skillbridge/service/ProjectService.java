@@ -11,8 +11,8 @@ public interface ProjectService {
 
     public ProjectResponse publishProject(PublishProjectRequest publishProjectRequest, UserEntity loggedInUser);
     public List<ProjectResponse> getProjectForUser(UserEntity user);
-    public List<ProjectResponse> getAllProjectsForFeed();
-    public ProjectResponse getProjectById(Long id);
+    public List<ProjectResponse> getAllProjectsForFeed(UserEntity loggedInUser );
+    public ProjectResponse getProjectById(Long id,UserEntity loggedInUser);
     public ProjectResponse editProject(EditProjectRequest editProjectRequest,UserEntity loggedInUser);
 
 }

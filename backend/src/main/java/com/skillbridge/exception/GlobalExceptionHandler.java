@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
-
+//79769488
     @ExceptionHandler(FieldLevelException.class)
     public ResponseEntity<ErrorResponse> handleFieldLevelException(FieldLevelException ex) {
         ErrorResponse error = new ErrorResponse(

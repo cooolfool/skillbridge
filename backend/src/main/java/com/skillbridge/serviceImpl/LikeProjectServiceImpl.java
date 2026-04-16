@@ -1,5 +1,6 @@
 package com.skillbridge.serviceImpl;
 
+import com.skillbridge.dto.LikeToggleResponse;
 import com.skillbridge.entity.LikeEntity;
 import com.skillbridge.entity.ProjectEntity;
 import com.skillbridge.entity.UserEntity;
@@ -35,63 +36,40 @@ public class LikeProjectServiceImpl implements LikeProjectService {
         return String.format(LIKE_KEY_PREFIX, projectId);
     }
 
-    @Override
-    public void likeProject(Long projectId, Long userId) {
-        log.info("inside like project service for project Id  : {} by user Id : {}",projectId,userId);
-        if (likeRepository.existsByProjectIdAndUserId(projectId, userId)) {
-            log.info("the project : {} is already liked by the user : {}", projectId,userId);
-            return; // already liked
-        }
-
+    public LikeToggleResponse toggleLike(Long projectId, Long userId){
+        LikeToggleResponse likeToggleResponse = new LikeToggleResponse();
+        Optional<LikeEntity> existingLike = likeRepository.findByProjectIdAndUserId(projectId, userId);
         ProjectEntity project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("Project not found"));
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        likeRepository.save(LikeEntity.builder()
-                .project(project)
-                .user(user)
-                .createdAt(LocalDateTime.now())
-                .build());
-        project.setLikesCount(project.getLikesCount()+1);
-        projectRepository.save(project);
-        log.info("Liked project!");
-        // Increment like count
-        redisTemplate.opsForValue().increment(getLikeCountKey(projectId));
-        redisTemplate.expire(getLikeCountKey(projectId), CACHE_TTL);
-    }
-
-    @Override
-    public void unlikeProject(Long projectId, Long userId) {
-        Optional<LikeEntity> existing = likeRepository.findByProjectIdAndUserId(projectId, userId);
-        if (existing.isEmpty()) return;
-        ProjectEntity project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new IllegalArgumentException("Project not found"));
-
-        likeRepository.delete(existing.get());
-        project.setLikesCount(project.getLikesCount()-1);
-        projectRepository.save(project);
-        // Decrement like count
-        redisTemplate.opsForValue().decrement(getLikeCountKey(projectId));
-        redisTemplate.expire(getLikeCountKey(projectId), CACHE_TTL);
-    }
-
-    @Override
-    public long getLikeCount(Long projectId) {
-        String key = getLikeCountKey(projectId);
-
-        String cached = redisTemplate.opsForValue().get(key);
-        if (cached != null) {
-            return Long.parseLong(cached);
+        boolean isLiked = false;
+        if (existingLike.isPresent()) {
+            log.info("the project : {} is already liked by the user : {}", projectId,userId);
+            likeRepository.delete(existingLike.get());
+            project.setLikesCount(project.getLikesCount()-1);
+            projectRepository.save(project);
+            // Decrement like count
+            redisTemplate.opsForValue().decrement(getLikeCountKey(projectId));
+            redisTemplate.expire(getLikeCountKey(projectId), CACHE_TTL);
+            isLiked = false;
         }
-
-        long count = likeRepository.countByProjectId(projectId);
-        redisTemplate.opsForValue().set(key, String.valueOf(count), CACHE_TTL);
-        return count;
-    }
-
-    @Override
-    public boolean hasUserLiked(Long projectId, Long userId) {
-        return likeRepository.existsByProjectIdAndUserId(projectId, userId);
+        else{
+            likeRepository.save(LikeEntity.builder()
+                    .project(project)
+                    .user(user)
+                    .createdAt(LocalDateTime.now())
+                    .build());
+            project.setLikesCount(project.getLikesCount()+1);
+            projectRepository.save(project);
+            log.info("Liked project!");
+            // Increment like count
+            redisTemplate.opsForValue().increment(getLikeCountKey(projectId));
+            redisTemplate.expire(getLikeCountKey(projectId), CACHE_TTL);
+            isLiked = true;
+        }
+        likeToggleResponse.setLiked(isLiked);
+        likeToggleResponse.setLikesCount(project.getLikesCount());
+        return likeToggleResponse;
     }
 }

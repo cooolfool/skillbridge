@@ -13,9 +13,9 @@ spring:
       driver-class-name: org.postgresql.Driver
   data:
     redis:
-      host: ${REDIS_HOST:gorgeous-humpback-60509.upstash.io}
+      host: ${REDIS_HOST:peaceful-werewolf-99799.upstash.io}
       port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:AexdAAIncDEwYjgzNmFhNmZjOWM0MWM0OTI1NzU2YWI2MjU3OTA0MnAxNjA1MDk}
+      password: ${REDIS_PASSWORD:gQAAAAAAAYXXAAIncDIwNzgxOTdlMTZlNGM0MDE0YWZiMGNiYWY2M2I0YTZmYnAyOTk3OTk}
       timeout: 60000
       ssl:
         enabled: true

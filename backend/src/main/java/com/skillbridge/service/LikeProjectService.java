@@ -1,10 +1,9 @@
 package com.skillbridge.service;
 
+import com.skillbridge.dto.LikeToggleResponse;
+
 public interface LikeProjectService {
 
-    void likeProject(Long projectId, Long userId);
-    void unlikeProject(Long projectId, Long userId);
-    long getLikeCount(Long projectId);
-    boolean hasUserLiked(Long projectId, Long userId);
+    LikeToggleResponse toggleLike(Long projectId, Long userId);
 
 }
